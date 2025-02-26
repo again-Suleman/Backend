@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Order, OrderItem
+from .models import Product, Order, OrderItem, User
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -29,15 +29,26 @@ class OrderItemSerializer(serializers.ModelSerializer):
         model = OrderItem
         fields = (
             "product_name",
+            "order_createdat",
             "price",
             "quantity",
             "subtotal",
         )
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "username",
+            "email",
+        )
+
+
 class OrderSerializer(serializers.ModelSerializer):
     orderItems = OrderItemSerializer(read_only=True, many=True)
     total_price = serializers.SerializerMethodField()
+    user = UserSerializer(read_only=True)
 
     def get_total_price(self, obj):
         return sum(item.subtotal for item in obj.orderItems.all())
