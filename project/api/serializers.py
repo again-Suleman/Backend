@@ -29,7 +29,6 @@ class OrderItemSerializer(serializers.ModelSerializer):
         model = OrderItem
         fields = (
             "product_name",
-            "order_createdat",
             "price",
             "quantity",
             "subtotal",

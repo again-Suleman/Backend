@@ -1,28 +1,23 @@
-from django.shortcuts import get_object_or_404
 from .models import Product, Order
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from .serializers import ProductSerializer, OrderSerializer
+from rest_framework import generics
 
 # Create your views here.
 
 
-@api_view(["GET"])
-def product_list(request):
-    products = Product.objects.all()
-    serializer = ProductSerializer(products, many=True)
-    return Response(serializer.data)
+class ProductListView(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
 
 
-@api_view(["GET"])
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    serializer = ProductSerializer(product)
-    return Response(serializer.data)
+class ProductDetailView(generics.RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_url_kwarg = "slug"
 
 
-@api_view(["GET"])
-def order_list(request):
-    order = Order.objects.all()
-    serializer = OrderSerializer(order, many=True)
-    return Response(serializer.data)
+class OrderListView(generics.ListAPIView):
+    queryset = Order.objects.prefetch_related(
+        "orderItems__product",
+    ).all()
+    serializer_class = OrderSerializer
