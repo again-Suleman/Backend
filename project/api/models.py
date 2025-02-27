@@ -40,7 +40,7 @@ class Order(models.Model):
     )
 
     def __str__(self) -> str:
-        return f"Order {self.id} by {self.user.username}"
+        return f"Order {self.order_id} by {self.user.username}"
 
 
 class OrderItem(models.Model):
@@ -55,4 +55,4 @@ class OrderItem(models.Model):
         return self.product.price * self.quantity
 
     def __str__(self) -> str:
-        return f"{self.quantity} x {self.product.name} in order {self.order.id}"
+        return f"{self.quantity} x {self.product.name} in order {self.order_id}"
