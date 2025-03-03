@@ -35,19 +35,9 @@ class OrderItemSerializer(serializers.ModelSerializer):
         )
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = (
-            "username",
-            "email",
-        )
-
-
 class OrderSerializer(serializers.ModelSerializer):
     orderItems = OrderItemSerializer(read_only=True, many=True)
     total_price = serializers.SerializerMethodField()
-    user = UserSerializer(read_only=True)
 
     def get_total_price(self, obj):
         return sum(item.subtotal for item in obj.orderItems.all())
